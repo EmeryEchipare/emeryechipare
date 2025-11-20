@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Emery Echipare Art Portfolio Website
 
-## Getting Started
+A professional art portfolio and e-commerce website for artist Emery Echipare, built with Next.js and deployed on Cloudflare Pages.
 
-First, run the development server:
+## Project Information
+
+- **Domain:** emeryechipare.com (purchased through Cloudflare)
+- **Live URL:** https://emeryechipare.com (DNS verification in progress)
+- **Temp URL:** https://488d17d7.emeryechipare-art.pages.dev
+- **Repository:** https://github.com/EmeryEchipare/emeryechipare
+- **Technology:** Next.js 16.0.3, React, Tailwind CSS, TypeScript
+- **Hosting:** Cloudflare Pages
+
+## Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Visit http://localhost:3000
+
+# Build for production (creates static export in 'out/' directory)
+npm run build
+
+# Deploy to Cloudflare Pages
+npx wrangler pages deploy out --project-name=emeryechipare-art --branch=main
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Status
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Completed ✅
+- Development environment setup (Git, Node.js, Wrangler CLI)
+- GitHub repository and account configured
+- Four-page website structure:
+  - Home page with hero and featured works
+  - Gallery page (12 placeholder artworks)
+  - About page with artist bio
+  - Contact page with email form (not functional yet)
+- Cloudflare Pages deployment
+- Custom domain purchased (DNS pending)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### In Progress 🚧
+- Domain DNS verification and connection
+- Troubleshooting Cloudflare Pages deployment issues
 
-## Learn More
+### Planned 📋
+- Upload actual artwork images
+- E-commerce integration (Stripe/PayPal)
+- Functional contact form
+- Individual artwork detail pages
+- Shopping cart functionality
+- Admin panel for managing artwork
+- SEO optimization
+- Blog section
 
-To learn more about Next.js, take a look at the following resources:
+## Documentation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Detailed documentation is available in the `/docs` directory:
+- `PROJECT_SETUP.md` - Complete setup history and configuration
+- `DEVELOPMENT.md` - Development workflows and commands  
+- `DEPLOYMENT.md` - Deployment procedures and troubleshooting
+- `FUTURE_ENHANCEMENTS.md` - Planned features and roadmap
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Key Configuration
 
-## Deploy on Vercel
+### Git
+- User: Emery Echipare
+- Email: Emery.Echipare@gmail.com
+- Branch: main
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Cloudflare
+- Primary Project: emeryechipare
+- Working Project: emeryechipare-art
+- Build Command: `npm run build`
+- Output Directory: `out`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Next.js
+Configured for static export in `next.config.ts`:
+```typescript
+output: 'export',
+images: { unoptimized: true }
+```
+
+## Contact
+
+**Artist:** Emery Echipare  
+**Email:** Emery.Echipare@gmail.com  
+**Website:** emeryechipare.com
+
+## License
+
+All artwork and content © Emery Echipare. All rights reserved.
