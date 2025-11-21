@@ -1,6 +1,7 @@
 /**
  * Cloudflare Worker API for Emery Echipare artwork engagement
  * Handles likes and comments with D1 database storage
+ * Includes admin authentication for comment moderation
  */
 
 // CORS headers - allow requests from production domain and dev server
@@ -28,6 +29,12 @@ function getCorsHeaders(origin) {
 function getUserIdentifier(request) {
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   return `ip:${ip}`;
+}
+
+// Helper to verify admin password
+function verifyAdmin(password, env) {
+  // Admin password stored in environment variable
+  return password === env.ADMIN_PASSWORD;
 }
 
 // Helper to format response
@@ -153,6 +160,63 @@ async function getComments(env, artworkId, origin) {
   }
 }
 
+// POST /admin/login - Verify admin password
+async function adminLogin(env, request, origin) {
+  try {
+    const body = await request.json();
+    const { password } = body;
+
+    if (!password) {
+      return jsonResponse({ error: 'Password required' }, 400, origin);
+    }
+
+    if (verifyAdmin(password, env)) {
+      // Generate a simple session token (in production, use JWT or similar)
+      const token = btoa(`admin:${Date.now()}:${password}`);
+      return jsonResponse({ success: true, token }, 200, origin);
+    } else {
+      return jsonResponse({ error: 'Invalid password' }, 401, origin);
+    }
+  } catch (error) {
+    console.error('Error logging in:', error);
+    return jsonResponse({ error: 'Login failed' }, 500, origin);
+  }
+}
+
+// DELETE /admin/comment/:id - Delete a comment (admin only)
+async function deleteComment(env, request, commentId, origin) {
+  try {
+    // Verify admin token
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+    }
+
+    const token = authHeader.substring(7);
+    let decoded;
+    try {
+      decoded = atob(token);
+    } catch {
+      return jsonResponse({ error: 'Invalid token' }, 401, origin);
+    }
+
+    const parts = decoded.split(':');
+    if (parts.length !== 3 || parts[0] !== 'admin' || !verifyAdmin(parts[2], env)) {
+      return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+    }
+
+    // Delete the comment
+    await env.DB.prepare('DELETE FROM comments WHERE id = ?')
+      .bind(commentId)
+      .run();
+
+    return jsonResponse({ success: true }, 200, origin);
+  } catch (error) {
+    console.error('Error deleting comment:', error);
+    return jsonResponse({ error: 'Failed to delete comment' }, 500, origin);
+  }
+}
+
 // POST /artwork/:id/comment - Add comment to artwork
 async function addComment(env, request, artworkId, origin) {
   try {
@@ -209,7 +273,18 @@ export default {
       return handleOptions(origin);
     }
 
-    // Parse route
+    // Admin routes
+    if (path === '/admin/login' && request.method === 'POST') {
+      return adminLogin(env, request, origin);
+    }
+
+    const deleteCommentMatch = path.match(/^\/admin\/comment\/(\d+)$/);
+    if (deleteCommentMatch && request.method === 'DELETE') {
+      const commentId = parseInt(deleteCommentMatch[1]);
+      return deleteComment(env, request, commentId, origin);
+    }
+
+    // Parse artwork routes
     const artworkMatch = path.match(/^\/artwork\/(\d+)\/(likes|liked|like|comments|comment)$/);
 
     if (!artworkMatch) {

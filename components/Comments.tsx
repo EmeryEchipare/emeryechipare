@@ -25,6 +25,14 @@ export default function Comments({ artworkId }: CommentsProps) {
   const [comment, setComment] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [deletingCommentId, setDeletingCommentId] = useState<number | null>(null);
+
+  // Check if admin is logged in
+  useEffect(() => {
+    const token = localStorage.getItem("adminToken");
+    setIsAdmin(!!token);
+  }, []);
 
   // Fetch comments
   useEffect(() => {
@@ -91,6 +99,40 @@ export default function Comments({ artworkId }: CommentsProps) {
       setError(error.message || "Failed to post comment");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId: number) => {
+    if (!confirm("Are you sure you want to delete this comment?")) {
+      return;
+    }
+
+    setDeletingCommentId(commentId);
+
+    try {
+      const token = localStorage.getItem("adminToken");
+      if (!token) {
+        alert("You must be logged in as admin to delete comments");
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/admin/comment/${commentId}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete comment");
+      }
+
+      // Remove comment from list
+      setComments(comments.filter(c => c.id !== commentId));
+    } catch (error: any) {
+      alert(error.message || "Failed to delete comment");
+    } finally {
+      setDeletingCommentId(null);
     }
   };
 
@@ -207,10 +249,22 @@ export default function Comments({ artworkId }: CommentsProps) {
           ) : (
             <div className="space-y-4">
               {comments.map((c) => (
-                <div key={c.id} className="bg-gray-50 rounded-lg p-4">
+                <div key={c.id} className="bg-gray-50 rounded-lg p-4 relative">
                   <div className="flex items-start justify-between mb-2">
                     <p className="font-medium text-gray-900">{c.author_name}</p>
-                    <p className="text-xs text-gray-500">{formatDate(c.created_at)}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs text-gray-500">{formatDate(c.created_at)}</p>
+                      {isAdmin && (
+                        <button
+                          onClick={() => handleDeleteComment(c.id)}
+                          disabled={deletingCommentId === c.id}
+                          className="text-red-600 hover:text-red-800 font-bold text-lg leading-none disabled:opacity-50"
+                          title="Delete comment"
+                        >
+                          ×
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <p className="text-gray-700 whitespace-pre-wrap">{c.comment_text}</p>
                 </div>
