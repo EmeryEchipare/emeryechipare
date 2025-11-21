@@ -1,0 +1,13 @@
+name = "emeryechipare-api"
+main = "src/index.js"
+compatibility_date = "2025-11-20"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "emeryechipare-db"
+database_id = "d247612a-366a-47c4-8483-0c55f97316a8"
+
+# CORS settings
+[vars]
+ALLOWED_ORIGIN = "https://emeryechipare.com"

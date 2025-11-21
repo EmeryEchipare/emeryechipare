@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getArtworkById, getAdjacentArtworkIds, artworks } from "@/lib/artworks";
+import ArtworkEngagement from "@/components/ArtworkEngagement";
 
 // Generate static paths for all artworks
 export function generateStaticParams() {
@@ -133,12 +134,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ id: st
                   </div>
                 )}
 
-                {/* Placeholder for future like/comment features */}
-                <div className="border-t border-gray-200 pt-8">
-                  <p className="text-sm text-gray-500 italic">
-                    Social features (likes & comments) coming soon...
-                  </p>
-                </div>
+                {/* Engagement features */}
+                <ArtworkEngagement artworkId={artworkId} />
               </div>
             </div>
           </div>
