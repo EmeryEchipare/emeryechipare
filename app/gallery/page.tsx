@@ -1,25 +1,8 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
-import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
 import { getAllArtworksSorted } from "@/lib/artworks";
 
 export default function Gallery() {
   const artworks = getAllArtworksSorted();
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxIndex, setLightboxIndex] = useState(0);
-
-  const openLightbox = (index: number) => {
-    setLightboxIndex(index);
-    setLightboxOpen(true);
-  };
-
-  const slides = artworks.map((art) => ({
-    src: `/artwork/${art.filename}`,
-    alt: art.title,
-  }));
 
   return (
     <div className="min-h-screen bg-white">
@@ -53,12 +36,12 @@ export default function Gallery() {
             Browse my collection of original artwork and prints available for purchase.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {artworks.map((art, index) => (
-              <div 
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {artworks.map((art) => (
+              <Link 
                 key={art.id} 
-                className="group cursor-pointer"
-                onClick={() => openLightbox(index)}
+                href={`/artwork/${art.id}`}
+                className="group"
               >
                 <div className="aspect-square bg-gray-100 rounded-lg mb-4 overflow-hidden group-hover:opacity-90 transition-opacity">
                   <img
@@ -68,16 +51,9 @@ export default function Gallery() {
                   />
                 </div>
                 <h3 className="text-sm font-medium text-gray-900">{art.title}</h3>
-              </div>
+              </Link>
             ))}
           </div>
-
-          <Lightbox
-            open={lightboxOpen}
-            close={() => setLightboxOpen(false)}
-            slides={slides}
-            index={lightboxIndex}
-          />
         </div>
       </main>
 

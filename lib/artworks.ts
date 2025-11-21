@@ -3,6 +3,7 @@ export interface Artwork {
   title: string;
   filename: string;
   date: string; // YYYY-MM-DD format
+  description?: string; // Optional artist description
 }
 
 export const artworks: Artwork[] = [
@@ -65,4 +66,24 @@ export function getLatestArtworks(count: number = 3): Artwork[] {
 // Helper function to get all artworks sorted by date (newest first)
 export function getAllArtworksSorted(): Artwork[] {
   return [...artworks].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+// Helper function to get an artwork by ID
+export function getArtworkById(id: number): Artwork | undefined {
+  return artworks.find((art) => art.id === id);
+}
+
+// Helper function to get previous and next artwork IDs
+export function getAdjacentArtworkIds(currentId: number): { prevId: number | null; nextId: number | null } {
+  const sortedArtworks = getAllArtworksSorted();
+  const currentIndex = sortedArtworks.findIndex((art) => art.id === currentId);
+  
+  if (currentIndex === -1) {
+    return { prevId: null, nextId: null };
+  }
+  
+  const prevId = currentIndex > 0 ? sortedArtworks[currentIndex - 1].id : null;
+  const nextId = currentIndex < sortedArtworks.length - 1 ? sortedArtworks[currentIndex + 1].id : null;
+  
+  return { prevId, nextId };
 }
