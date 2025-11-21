@@ -142,7 +142,7 @@ export default function Comments({ artworkId }: CommentsProps) {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 maxLength={100}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent text-gray-900"
                 required
               />
             </div>
@@ -156,7 +156,7 @@ export default function Comments({ artworkId }: CommentsProps) {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent text-gray-900"
               />
             </div>
 
@@ -170,7 +170,7 @@ export default function Comments({ artworkId }: CommentsProps) {
                 onChange={(e) => setComment(e.target.value)}
                 maxLength={1000}
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent resize-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent resize-none text-gray-900"
                 required
               />
               <p className="text-xs text-gray-500 mt-1">
