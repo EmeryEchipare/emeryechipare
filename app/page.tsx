@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { getLatestArtworks } from "@/lib/artworks";
 
 export default function Home() {
+  const latestArtworks = getLatestArtworks(3);
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -30,12 +33,9 @@ export default function Home() {
       <main className="pt-20">
         <div className="max-w-7xl mx-auto px-6 py-24">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-6xl font-serif font-bold text-gray-900 mb-6">
-              Art & Soul
+            <h1 className="text-6xl font-serif font-bold text-gray-900 mb-12">
+              Distracted Listening
             </h1>
-            <p className="text-xl text-gray-600 mb-12">
-              Welcome to my creative space. Explore original artwork and limited edition prints.
-            </p>
             <div className="flex gap-4 justify-center">
               <Link
                 href="/gallery"
@@ -59,16 +59,21 @@ export default function Home() {
             Featured Works
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="group cursor-pointer">
-                <div className="aspect-square bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                  <div className="w-full h-full flex items-center justify-center text-gray-400">
-                    <p className="text-sm">Artwork {i}</p>
-                  </div>
+            {latestArtworks.map((art) => (
+              <Link 
+                key={art.id} 
+                href="/gallery"
+                className="group cursor-pointer"
+              >
+                <div className="aspect-square bg-gray-100 rounded-lg mb-4 overflow-hidden group-hover:opacity-90 transition-opacity">
+                  <img
+                    src={`/artwork/${art.filename}`}
+                    alt={art.title}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-1">Untitled {i}</h3>
-                <p className="text-sm text-gray-500">Available as print</p>
-              </div>
+                <h3 className="text-sm font-medium text-gray-900">{art.title}</h3>
+              </Link>
             ))}
           </div>
         </div>
