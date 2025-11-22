@@ -33,7 +33,7 @@ export default function Gallery() {
         <div className="max-w-7xl mx-auto px-6">
           <h1 className="text-5xl font-serif font-bold text-gray-900 mb-4">Gallery</h1>
           <p className="text-xl text-gray-600 mb-16">
-            Browse my collection of original artwork and prints available for purchase.
+            Browse my collection of original hand drawn artwork.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
